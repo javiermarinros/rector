@@ -155,8 +155,8 @@ CODE_SAMPLE
                 return null;
             }
 
-            $unionTypeNode = $this->collectionTypeFactory->createFromIdentifierType($collectionObjectType);
-            $attributeAwareVarTagValueNode = new AttributeAwareVarTagValueNode($unionTypeNode, '', '');
+            $attributeAwareUnionTypeNode = $this->collectionTypeFactory->createFromIdentifierType($collectionObjectType);
+            $attributeAwareVarTagValueNode = new AttributeAwareVarTagValueNode($attributeAwareUnionTypeNode, '', '');
             $phpDocInfo->addTagValueNode($attributeAwareVarTagValueNode);
         }
 
@@ -191,6 +191,15 @@ CODE_SAMPLE
 
         return $classMethod;
     }
+    private function hasNodeTagValueNode(Node $node, string $tagValueNodeClass): bool
+    {
+        $phpDocInfo = $node->getAttribute(AttributeKey::PHP_DOC_INFO);
+        if (! $phpDocInfo instanceof PhpDocInfo) {
+            return false;
+        }
+
+        return $phpDocInfo->hasByType($tagValueNodeClass);
+    }
 
     private function resolveCollectionSetterAssignType(ClassMethod $classMethod): ?TypeNode
     {
@@ -219,21 +228,11 @@ CODE_SAMPLE
             return null;
         }
 
-        $class = $propertyFetch->getAttribute(AttributeKey::CLASS_NODE);
-        if (! $class instanceof Class_) {
+        $classLike = $propertyFetch->getAttribute(AttributeKey::CLASS_NODE);
+        if (! $classLike instanceof Class_) {
             return null;
         }
 
-        return $class->getProperty($propertyName);
-    }
-
-    private function hasNodeTagValueNode(Node $node, string $tagValueNodeClass): bool
-    {
-        $phpDocInfo = $node->getAttribute(AttributeKey::PHP_DOC_INFO);
-        if (! $phpDocInfo instanceof PhpDocInfo) {
-            return false;
-        }
-
-        return $phpDocInfo->hasByType($tagValueNodeClass);
+        return $classLike->getProperty($propertyName);
     }
 }
