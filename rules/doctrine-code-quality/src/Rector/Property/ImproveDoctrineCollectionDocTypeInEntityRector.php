@@ -155,7 +155,9 @@ CODE_SAMPLE
                 return null;
             }
 
-            $attributeAwareUnionTypeNode = $this->collectionTypeFactory->createFromIdentifierType($collectionObjectType);
+            $attributeAwareUnionTypeNode = $this->collectionTypeFactory->createFromIdentifierType(
+                $collectionObjectType
+            );
             $attributeAwareVarTagValueNode = new AttributeAwareVarTagValueNode($attributeAwareUnionTypeNode, '', '');
             $phpDocInfo->addTagValueNode($attributeAwareVarTagValueNode);
         }
@@ -191,6 +193,7 @@ CODE_SAMPLE
 
         return $classMethod;
     }
+
     private function hasNodeTagValueNode(Node $node, string $tagValueNodeClass): bool
     {
         $phpDocInfo = $node->getAttribute(AttributeKey::PHP_DOC_INFO);
